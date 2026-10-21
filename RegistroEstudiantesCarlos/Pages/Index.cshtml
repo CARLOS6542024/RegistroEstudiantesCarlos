@@ -1,0 +1,83 @@
+﻿@page
+@model IndexModel
+
+<h1>Registrar Nuevo Estudiante</h1>
+
+<form method="post">
+    <label>Nombre:</label>
+    <input type="text" name="nombreForm" required />
+    <br /><br />
+
+    <label>Apellido:</label>
+    <input type="text" name="apellidoForm" required />
+    <br /><br />
+
+    <button type="submit">Guardar en Base de Datos</button>
+</form>
+
+<hr />
+
+<h3>@Model.MensajeSistema</h3>
+
+<hr />
+
+@if (!string.IsNullOrEmpty(Model.MensajeSistema))
+{
+    if (Model.MensajeSistema.Contains("Error") || Model.MensajeSistema.Contains("Falla"))
+    {
+        <h3 style="color: red;">@Model.MensajeSistema</h3>
+    }
+    else
+    {
+        <h3 style="color: green;">@Model.MensajeSistema</h3>
+    }
+}
+
+<h3>Listado de Estudiantes</h3>
+
+<form method="post">
+    <button type="submit" name="accion" value="vaciar_tabla">Vaciar Tabla</button>
+</form>
+
+<table border="1" cellpadding="10" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Matrícula (ID)</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.ListaEstudiantes != null && Model.ListaEstudiantes.Count > 0)
+        {
+            foreach (var alumno in Model.ListaEstudiantes)
+            {
+                <tr>
+                    <td>@alumno.Id</td>
+                    <td>@alumno.Nombre</td>
+                    <td>@alumno.Apellido</td>
+                    <td>
+
+                        <form method="post">
+
+                            <input type="hidden" name="estudiantesId" value="@alumno.Id" />
+
+                            <button type="submit" name="accion" value="borrar_individual"
+                                    onclick="return confirm('¿Seguro que deseas borrar a @alumno.Nombre @alumno.Apellido?');"
+                                    style="color: red; cursor: pointer;">
+                                Eliminar Registro
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="4" style="text-align: center;">No hay estudiantes registrados aún.</td>
+            </tr>
+        }
+    </tbody>
+</table>
